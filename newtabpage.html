@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>New Tab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .center-div {
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -75%);
+            overflow: auto;
+            text-align: center;
+        }
+
+        .big {
+            font-size: 900%;
+        }
+
+        .bit-big {
+            font-size: 500%;
+        }
+
+        sup {
+            font-size: 50%;
+        }
+
+        .invisible {
+            display: none;
+        }
+
+        .inner {
+            display: inline-block;
+        }
+
+        .searchbox {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            text-align: center;
+            top: 70%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, 50%);
+            transform: scale(2, 2);
+        }
+
+        .credit {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+
+        .text {
+            color: #EEEEEE;
+            text-shadow: 5px 5px 5px #000000;
+        }
+
+        @media only screen and (max-width: 1000px) {
+            .big {
+                font-size: 350%;
+            }
+
+            .bit-big {
+                font-size: 150%;
+            }
+
+            sup {
+                font-size: 50%;
+            }
+
+            .searchbox {
+                transform: scale(1.5, 1.5);
+            }
+
+            .credit {
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+        }
+    </style>
+    <script>
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        // This script loads the settings and applies them
+        var default_search_engines = `<option value=\"https://google.com/search?q={query}\">Google</option>
+<option value=\"https://bing.com/search?q={query}\">Bing</option>
+<option value=\"https://duckduckgo.com/search?q={query}\">DuckDuckGo</option>
+<option value=\"https://youtube.com/results?search_query={query}\">YouTube</option>
+<option value=\"https://wikipedia.org/wiki/Special:Search?search={query}\">Wikipedia</option>
+<option value=\"https://www.amazon.com/s?k={query}\">Amazon</option>
+<option value=\"https://unsplash.com/s/photos/{query}\">Unsplash</option>`;
+
+        function setSettings() {
+            var search_engines = getCookie("search_engines");
+            if (search_engines != "") {
+                console.log("Loading settings from cookies...");
+                document.getElementById('search-host').innerHTML += search_engines;
+            } else {
+                console.log("Writing settings to cookies...");
+                setCookie("search_engines", default_search_engines, 36500);
+                search_engines = getCookie("search_engines");
+                console.log("Loading settings from cookies...");
+                document.getElementById('search-host').innerHTML += search_engines;
+            }
+        }
+    </script>
+</head>
+
+<body ondblclick="changeImage()" onload="setSettings()">
+    <div class="center-div text" ondblclick="changeImage()">
+        <p ondblclick="changeImage()"><span id="time" class="big"></span><br><span id="date" class="bit-big"></span>
+        </p>
+    </div>
+    <p ondblclick="changeImage()" class="text credit">Images From <a class="text"
+            href="https://unsplash.com/">Unsplash</a></p>
+    <p id="loading-text" ondblclick="changeImage()" class="text invisible"
+        style="position: fixed; bottom: 0; right: 0;">Loading
+        image...</p>
+    <script>
+        var changeImageTimeout = null;
+        function changeImage() {
+            clearTimeout(changeImageTimeout);
+            document.getElementById("loading-text").classList.remove("invisible");
+            const imageWidth = window.screen.width <= 1000 ? 2400 : 950;
+            const imageHeight = window.screen.width <= 1000 ? 1700 : 640;
+            const tag = window.screen.width <= 1000 ? "portrait" : "landscape";
+            const search_queries = ["nature", "space", "galaxy", "planets", "moon"];
+            const search_query = search_queries[Math.floor(Math.random() * search_queries.length)];
+            console.log("Getting background image...");
+            console.log("Searching for " + search_query);
+            fetch(`https://source.unsplash.com/1600x900/?${search_query},nopeople,notext,${tag}`).then((response) => {
+                if (!(response.ok && response.status == 200)) {
+                    changeImage();
+                    return;
+                }
+                console.log(`Setting background image to ${response.url}...`);
+                document.body.style.backgroundImage = `url("${response.url}")`;
+                document.getElementById("loading-text").classList.add("invisible");
+            });
+            window.changeImageTimeout = setTimeout(changeImage, 60000);
+        }
+
+        function getTime(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds().toString();
+            if (seconds.length == 1) seconds = `0${seconds}`;
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            return strTime;
+        }
+        function updateTime() {
+            var date = new Date();
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            var date_num = date.getDate();
+            if (date_num == 1) {
+                var date_text = "<sup>st</sup>";
+            } else if (date_num == 2) {
+                var date_text = "<sup>nd</sup>";
+            } else if (date_num == 3) {
+                var date_text = "<sup>rd</sup>";
+            } else {
+                var date_text = "<sup>th</sup>";
+            }
+            date_text = `${date_num}${date_text}`;
+            document.getElementById('time').innerHTML = getTime(date).toUpperCase();
+            document.getElementById("date").innerHTML = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date_text} ${date.getFullYear()}`;
+        }
+        setInterval(updateTime, 1);
+        updateTime();
+        const imgs = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg"];
+        var default_img_url = imgs[Math.floor(Math.random() * imgs.length)];
+        const default_img_dir = "default_images";
+        document.body.style.backgroundImage = `url("${default_img_dir}/${default_img_url}")`;
+        window.changeImageTimeout = setTimeout(changeImage, 60000);
+    </script>
+    <div class="searchbox">
+        <div class="inner">
+            <form id="search form" action="javascript:goToSite()">
+                <input type="text" placeholder="Search the Web" id="search-box" style="left: 25%; top: 50%;">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+            <br>
+            <br>
+            <label for="search-host" class="text">Search with:</label>
+            <select id="search-host"></select>
+            <script>
+                function goToSite() {
+                    url = document.getElementById("search-host").value;
+                    query = encodeURIComponent(encodeURI(document.getElementById("search-box").value));
+                    url = url.replace("{query}", query);
+                    window.location.assign(url);
+                }
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
