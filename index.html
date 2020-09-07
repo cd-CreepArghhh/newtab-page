@@ -118,33 +118,10 @@
             }
             return "";
         }
-
-        // This script loads the settings and applies them
-        var default_search_engines = `<option value=\"https://google.com/search?q={query}\">Google</option>
-<option value=\"https://bing.com/search?q={query}\">Bing</option>
-<option value=\"https://duckduckgo.com/search?q={query}\">DuckDuckGo</option>
-<option value=\"https://youtube.com/results?search_query={query}\">YouTube</option>
-<option value=\"https://wikipedia.org/wiki/Special:Search?search={query}\">Wikipedia</option>
-<option value=\"https://www.amazon.com/s?k={query}\">Amazon</option>
-<option value=\"https://unsplash.com/s/photos/{query}\">Unsplash</option>`;
-
-        function setSettings() {
-            var search_engines = getCookie("search_engines");
-            if (search_engines != "") {
-                console.log("Loading settings from cookies...");
-                document.getElementById('search-host').innerHTML += search_engines;
-            } else {
-                console.log("Writing settings to cookies...");
-                setCookie("search_engines", default_search_engines, 36500);
-                search_engines = getCookie("search_engines");
-                console.log("Loading settings from cookies...");
-                document.getElementById('search-host').innerHTML += search_engines;
-            }
-        }
     </script>
 </head>
 
-<body ondblclick="changeImage()" onload="setSettings()">
+<body ondblclick="changeImage()">
     <div class="center-div text" ondblclick="changeImage()">
         <p ondblclick="changeImage()"><span id="time" class="big"></span><br><span id="date" class="bit-big"></span>
         </p>
@@ -236,6 +213,26 @@
             </script>
         </div>
     </div>
+    <script>
+        // This script loads the settings and applies them
+        var default_search_engines = '<option value="https://google.com/search?q={query}">Google</option>\n<option value="https://bing.com/search?q={query}">Bing</option>\n<option value="https://duckduckgo.com/search?q={query}">DuckDuckGo</option>\n<option value="https://youtube.com/results?search_query={query}">YouTube</option>\n<option value="https://wikipedia.org/wiki/Special:Search?search={query}">Wikipedia</option>\n<option value="https://www.amazon.com/s?k={query}">Amazon</option>\n<option value="https://unsplash.com/s/photos/{query}">Unsplash</option>';
+
+        function setSettings() {
+            var search_engines = getCookie("search_engines");
+            if (search_engines != "") {
+                console.log("Loading settings from cookies...");
+                document.getElementById('search-host').innerHTML += search_engines;
+            } else {
+                console.log("Writing settings to cookies...");
+                setCookie("search_engines", default_search_engines, 36500);
+                search_engines = getCookie("search_engines");
+                console.log("Loading settings from cookies...");
+                // search_engines = default_search_engines; // remove this line if this is not a file:/// url (in other words, delete this line if you are not running from a file)
+                document.getElementById('search-host').innerHTML += search_engines;
+            }
+        }
+        setSettings();
+    </script>
 </body>
 
 </html>
