@@ -189,8 +189,11 @@
         updateTime();
         const imgs = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg"];
         var default_img_url = imgs[Math.floor(Math.random() * imgs.length)];
-        const default_img_dir = "default_images";
-        document.body.style.backgroundImage = `url("${default_img_dir}/${default_img_url}")`;
+        var path = window.location.href.split("/");
+        path = path.slice(0, path.length - 2).join("/");
+        var default_images_folder_name = "default_images";
+        var path_to_images_folder = `${path}/${default_images_folder_name}`;
+        document.body.style.backgroundImage = `url("${path_to_images_folder}/${default_img_url}")`;
         window.changeImageTimeout = setTimeout(changeImage, 60000);
     </script>
     <div class="searchbox">
@@ -227,7 +230,7 @@
                 setCookie("search_engines", encodeURIComponent(default_search_engines), 36500);
                 search_engines = decodeURIComponent(getCookie("search_engines"));
                 console.log("Loading settings from cookies...");
-                search_engines = default_search_engines; // remove this line if this is not a file:/// url (in other words, delete this line if you are not running from a file)
+                // search_engines = default_search_engines; // remove this line if this is not a file:/// url (in other words, delete this line if you are not running from a file)
                 document.getElementById('search-host').innerHTML += search_engines;
             }
         }
