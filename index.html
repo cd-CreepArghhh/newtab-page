@@ -227,6 +227,7 @@
                 setCookie("search_engines", default_search_engines, 36500);
                 search_engines = getCookie("search_engines");
                 console.log(search_engines);
+                console.log(default_search_engines);
                 console.log("Loading settings from cookies...");
                 // search_engines = default_search_engines; // remove this line if this is not a file:/// url (in other words, delete this line if you are not running from a file)
                 document.getElementById('search-host').innerHTML += search_engines;
