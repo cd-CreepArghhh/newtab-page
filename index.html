@@ -96,29 +96,6 @@
             }
         }
     </style>
-    <script>
-        function setCookie(cname, cvalue, exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-            var expires = "expires=" + d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-    </script>
 </head>
 
 <body ondblclick="changeImage()">
@@ -138,12 +115,11 @@
             document.getElementById("loading-text").classList.remove("invisible");
             const imageWidth = window.screen.width <= 1000 ? 2400 : 950;
             const imageHeight = window.screen.width <= 1000 ? 1700 : 640;
-            const tag = window.screen.width <= 1000 ? "portrait" : "landscape";
-            const search_queries = ["nature", "galaxy"];
+            const search_queries = ["nature", "tree"]; // These are the only working ones, the others (galaxy, space, etc.) just don't
             const search_query = search_queries[Math.floor(Math.random() * search_queries.length)];
             console.log("Getting background image...");
             console.log("Searching for " + search_query);
-            fetch(`https://source.unsplash.com/1600x900/?${search_query},nopeople,notext,${tag}`).then((response) => {
+            fetch(`https://source.unsplash.com/1600x900/?${search_query},nopeople,notext`).then((response) => {
                 if (!(response.ok && response.status == 200)) {
                     changeImage();
                     return;
