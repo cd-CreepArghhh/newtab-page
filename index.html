@@ -220,21 +220,7 @@
         // This script loads the settings and applies them
         var default_search_engines = '<option value="https://google.com/search?q={query}">Google</option>\n<option value="https://bing.com/search?q={query}">Bing</option>\n<option value="https://duckduckgo.com/search?q={query}">DuckDuckGo</option>\n<option value="https://youtube.com/results?search_query={query}">YouTube</option>\n<option value="https://wikipedia.org/wiki/Special:Search?search={query}">Wikipedia</option>\n<option value="https://www.amazon.com/s?k={query}">Amazon</option>\n<option value="https://unsplash.com/s/photos/{query}">Unsplash</option>';
 
-        function setSettings() {
-            var search_engines = decodeURIComponent(getCookie("search_engines"));
-            if (search_engines != "") {
-                console.log("Loading settings from cookies...");
-                document.getElementById('search-host').innerHTML += search_engines;
-            } else {
-                console.log("Writing settings to cookies...");
-                setCookie("search_engines", encodeURIComponent(default_search_engines), 36500);
-                search_engines = decodeURIComponent(getCookie("search_engines"));
-                console.log("Loading settings from cookies...");
-                // search_engines = default_search_engines; // remove this line if this is not a file:/// url (in other words, delete this line if you are not running from a file)
-                document.getElementById('search-host').innerHTML += search_engines;
-            }
-        }
-        setSettings();
+        document.getElementById('search-host').innerHTML += default_search_engines;
     </script>
 </body>
 
